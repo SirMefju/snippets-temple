@@ -1,4 +1,7 @@
 import csv
+import os
+import time
+import datetime
 
 
 class CsvCombinations:
@@ -26,7 +29,16 @@ class CsvCombinations:
                 print(i)
                 print(i['Name'])
 
+    def modify_date(path):
+        file_date = time.ctime(os.path.getmtime(path))
+        file_date = datetime.datetime.strptime(file_date, "%a %b %d %H:%M:%S %Y")
+        return file_date.strftime("%d-%m-%Y %H:%M:%S")
+
 
 if __name__ == '__main__':
     CsvCombinations.csv_writer('csv-examples/file.csv')
     CsvCombinations.csv_reader('csv-examples/file.csv')
+    file_modify_time = CsvCombinations.modify_date('csv-examples/file.csv')
+    file_size = os.path.getsize('csv-examples/file.csv')
+    print("File modify time: " + str(file_modify_time))
+    print("File size: " + str(file_size) + " B")
