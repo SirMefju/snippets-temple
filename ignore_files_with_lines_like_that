@@ -1,0 +1,31 @@
+Utwórz skrypt o nazwie "pre-commit" (bez rozszerzenia) w katalogu .git/hooks w swoim repozytorium. Jeśli ten katalog nie istnieje, utwórz go.
+Otwórz utworzony skrypt "pre-commit" w edytorze tekstowym i dodaj następujący kod:
+
+#!/bin/sh
+
+# Pobierz zmienione pliki w bieżącym commitcie
+files=$(git diff --cached --name-only --diff-filter=ACM)
+
+# Sprawdź, czy wśród zmienionych plików jest plik .gitignore
+if echo "$files" | grep -q ".gitignore"; then
+  # Jeśli tak, wykonaj dodatkowe działania dla pliku .gitignore
+  # np. sprawdzanie czy określone linie są obecne lub brakujące
+  # Możesz zastosować narzędzia takie jak awk, grep itp.
+
+  # Przykład: Sprawdzanie obecności konkretnej linii w pliku .gitignore
+  if grep -q "linia-do-sprawdzenia" ".gitignore"; then
+    echo "Linia już istnieje w pliku .gitignore. Commit zostanie zablokowany."
+    exit 1
+  fi
+fi
+
+# Zakończ skrypt bez błędów
+exit 0
+
+Zapisz skrypt "pre-commit" i zamknij edytor.
+Nadaj skryptowi "pre-commit" uprawnienia do wykonania, wykonując polecenie:
+
+chmod +x .git/hooks/pre-commit
+
+Teraz, gdy wykonasz commit, skrypt "pre-commit" zostanie automatycznie uruchomiony. Możesz dostosować ten skrypt, aby spełniał Twoje konkretne wymagania dotyczące kontroli linii w pliku .gitignore.
+Pamiętaj, że skrypt "pre-commit" jest wykonywany lokalnie na Twoim komputerze, więc jeśli inni członkowie zespołu nie mają tego samego skryptu, kontrola linii w .gitignore nie zostanie zastosowana u nich. Możesz rozważyć dodanie instrukcji dla innych członków zespołu, aby również używali skryptu "pre-commit" w celu spójności kontroli linii w .gitignore.
